@@ -12,7 +12,7 @@ An agent skill that searches job sites for you. You give it a job title and your
 ## Requirements
 
 - An AI agent that supports `SKILL.md` skills and can **use a browser and write files on your computer** (for example Claude Code, Claude Desktop or Cowork, or another agent with a browser tool such as Playwright MCP). A plain web chat cannot write to your disk.
-- If you're on the free tier, you can use GitHub Copilot. Its free plan supports Playwright as a plugin.
+- If you're on the free tier, you can use GitHub Copilot. Its free plan supports Playwright MCP to Brows web.
 - Microsoft Edge or Google Chrome to open the results page (it uses the folder-access feature of these browsers).
 
 ## Install
