@@ -1,0 +1,33 @@
+{
+  "page_title": "Job matches",
+  "profile": {
+    "job_titles": ["Backend Developer"],
+    "search_terms": ["Backend Developer", "Python Developer", "Softwareentwickler Python"],
+    "core_keywords": ["Python"],
+    "exclude_keywords": ["SAP", "ABAP"],
+    "skills": ["Python", "Django", "REST APIs", "PostgreSQL", "Docker", "Git", "Scrum"],
+    "experience_years": 3,
+    "seniority": "mid",
+    "qualifications": "B.Sc. Computer Science",
+    "languages": ["German C1", "English B2"],
+    "cv_source": ""
+  },
+  "locations": [
+    { "city": "Berlin", "radius_km": 30 },
+    { "city": "Hamburg", "radius_km": 30 }
+  ],
+  "remote": false,
+  "senior_handling": "separate",
+  "sources": [
+    { "name": "Indeed", "type": "website", "enabled": true,
+      "search_url": "https://de.indeed.com/jobs?q={term}&l={city}&radius={radius}", "pages": 3, "extra_pages": 2 },
+    { "name": "StepStone", "type": "website", "enabled": true,
+      "search_url": "https://www.stepstone.de/jobs/{term}/in-{city}", "pages": 3, "extra_pages": 2 },
+    { "name": "XING", "type": "website", "enabled": true,
+      "search_url": "https://www.xing.com/jobs/search?keywords={term}&location={city}", "pages": 3, "extra_pages": 2 },
+    { "name": "Google", "type": "google", "enabled": true, "pages": 2 },
+    { "name": "Bundesagentur", "type": "mcp", "enabled": false,
+      "tool": "jobsuche-mcp-server-search_jobs",
+      "params": { "area": "{city}", "title": "{term}", "radiusKm": "{radius}", "maxResults": 50 } }
+  ]
+}

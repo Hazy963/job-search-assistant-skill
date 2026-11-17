@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>C# / .NET job matches</title>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("jobs-theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}catch(e){document.documentElement.dataset.theme="light"}</script>
+<style>
+:root{color-scheme:light;--bg:#f5f7fa;--card:#fff;--ink:#1a2430;--muted:#5b6b7b;--line:#dde3ea;--accent:#0b5cad;--accent-soft:#e8f1fb;--f0:#137a4b;--f1:#0b5cad;--f2:#946b00;--f3:#6b7785;--shadow:0 1px 3px #1624300f}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0f151c;--card:#18212b;--ink:#e6ebf0;--muted:#9aa8b6;--line:#2a3643;--accent:#5aa3ee;--accent-soft:#1b2c3f;--f0:#43c086;--f1:#5aa3ee;--f2:#e0b44a;--f3:#8d9aa8;--shadow:none}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--accent);text-underline-offset:2px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+header{background:var(--card);border-bottom:1px solid var(--line)}
+.bar{max-width:1180px;margin:0 auto;padding:18px 24px;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between}
+h1{font-size:1.35rem;margin:0;letter-spacing:-.01em}
+.stats{display:flex;flex-wrap:wrap;gap:8px 22px;color:var(--muted);font-size:.9rem}
+.stats b{display:block;font-size:1.25rem;line-height:1.2;color:var(--ink);font-variant-numeric:tabular-nums}
+.layout{max-width:1180px;margin:0 auto;padding:24px;display:grid;grid-template-columns:260px minmax(0,1fr);gap:24px;align-items:start}
+aside{position:sticky;top:16px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;box-shadow:var(--shadow)}
+aside h2{font-size:.95rem;margin:0 0 12px}
+.f{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;font-size:.85rem;color:var(--muted)}
+.chk{display:flex;gap:8px;align-items:center;margin:8px 0;font-size:.92rem;color:var(--ink)}
+.chk input{width:16px;height:16px;accent-color:var(--accent)}
+input[type=search],select,button{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+button{cursor:pointer}button:hover:not(:disabled){border-color:var(--accent)}button:disabled{opacity:.4;cursor:default}
+.theme{display:flex;gap:6px;align-items:center;font-size:.88rem}
+.theme[aria-pressed="true"]{border-color:var(--accent)}
+.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.primary:hover:not(:disabled){filter:brightness(1.08)}
+#reset{width:100%;margin-top:6px;color:var(--muted)}
+.msg{color:#b3261e;font-size:.9rem;min-height:1.2em;margin:0 0 8px}
+:root[data-theme="dark"] .msg{color:#ff8a80}
+.job{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--fc,var(--f3));border-radius:10px;padding:16px 18px;margin:0 0 12px;box-shadow:var(--shadow)}
+.job.done{opacity:.6}
+.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.tag{font-size:.75rem;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.tag.fit{background:transparent;border:1px solid var(--fc);color:var(--fc)}
+.job h2{font-size:1.1rem;line-height:1.35;margin:0}
+.job h2 a{text-decoration:none}.job h2 a:hover{text-decoration:underline}
+.meta{color:var(--muted);margin:4px 0 12px;font-size:.9rem}
+.apply{display:flex;gap:6px;align-items:center;white-space:nowrap;font-size:.88rem;font-weight:600;cursor:pointer;padding:6px 10px;border:1px solid var(--line);border-radius:8px}
+.apply:has(input:checked){background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.apply input{width:16px;height:16px;accent-color:var(--accent)}
+dl{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;margin:0}
+dt{color:var(--muted);font-size:.85rem}dd{margin:0}
+details{margin-top:10px}summary{cursor:pointer;color:var(--accent);font-size:.88rem}
+details dl{margin-top:8px}
+.found{color:var(--muted);font-size:.82rem;margin:10px 0 0}
+.empty{padding:40px 24px;text-align:center;background:var(--card);border:1px dashed var(--line);border-radius:10px;color:var(--muted)}
+.pager{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:20px 0}
+.pager .cur{background:var(--accent);border-color:var(--accent);color:#fff}
+.note{color:var(--muted);font-size:.85rem;text-align:center;margin:24px 0 0}
+.count{color:var(--muted);font-size:.9rem;margin:0 0 12px}
+@media(max-width:820px){.layout{grid-template-columns:1fr;padding:16px}aside{position:static}.bar{padding:14px 16px}dl{grid-template-columns:1fr}dt{margin-top:4px}}
+@media(prefers-reduced-motion:no-preference){.job{transition:box-shadow .15s}.job:hover{box-shadow:0 4px 14px #16243014}}
+</style></head><body>
+<header><div class="bar"><h1>C# / .NET job matches</h1>
+<div class="stats" id="stat" aria-live="polite"></div>
+<button class="theme" id="theme" aria-label="Switch between light and dark theme"></button></div></header>
+<div class="layout">
+<aside><h2>Filter and sort</h2>
+<button class="primary" id="open" style="width:100%;margin-bottom:14px">Select job folder</button>
+<div id="flt" hidden>
+<label class="f">Search<input type="search" id="q" placeholder="Title, company, stack"></label>
+<label class="f">Fit<select id="fit"><option value="">All</option><option>Very strong</option><option>Strong</option><option>Possible</option><option>Weak</option></select></label>
+<label class="f">Level<select id="lvl"><option value="">All</option><option value="level">At my level</option><option value="senior">Senior / Lead</option></select></label>
+<label class="f">City<select id="city"><option value="">All</option></select></label>
+<label class="f">Source<select id="src"><option value="">All</option></select></label>
+<label class="f">Sort by<select id="sort"><option value="fit">Fit</option><option value="new">Newest first</option><option value="company">Company</option><option value="title">Title</option></select></label>
+<label class="chk"><input type="checkbox" id="hide" checked>Hide applied</label>
+<label class="chk"><input type="checkbox" id="onlyapp">Only applied</label>
+<label class="chk"><input type="checkbox" id="onlynew">Show only new jobs</label>
+<button id="reset">Reset filters</button>
+<button id="change" style="width:100%;margin-top:6px;color:var(--muted)">Change folder</button></div></aside>
+<section><p class="msg" id="msg" role="status"></p><p class="count" id="count"></p>
+<div id="list"><div class="empty">Select the job folder to load your listings. You only need to do this once.</div></div>
+<div class="pager" id="pager"></div>
+<p class="note">Job availability and listing details can change. Applied marks are saved in data sources/applied.json.</p></section>
+</div>
+<script>
+const FC={"Very strong":"var(--f0)",Strong:"var(--f1)",Possible:"var(--f2)",Weak:"var(--f3)"};
+const PER=10,FIT={"Very strong":0,"Strong":1,"Possible":2,"Weak":3};
+let root=null,jobs=[],applied={},page=1,newest="";
+const $=s=>document.querySelector(s);
+const key=j=>j.id||j.canonical_url;
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const safeUrl=u=>/^https?:\/\//i.test(u||"")?u:"#";
+const say=t=>$("#msg").textContent=t||"";
+function idb(mode,val){return new Promise((ok,no)=>{const r=indexedDB.open("jobs-ui",1);r.onupgradeneeded=()=>r.result.createObjectStore("h");r.onerror=no;
+r.onsuccess=()=>{const s=r.result.transaction("h",mode==="get"?"readonly":"readwrite").objectStore("h");const q=mode==="get"?s.get("root"):s.put(val,"root");q.onsuccess=()=>ok(q.result);q.onerror=no}})}
+async function dsDir(create){return root.getDirectoryHandle("data sources",{create})}
+async function readJson(name,def){try{const f=await(await(await dsDir(false)).getFileHandle(name)).getFile();return JSON.parse(await f.text())}catch(e){return def}}
+async function setApplied(url,on){
+  const cur=await readJson("applied.json",{});          /* re-read so nothing written elsewhere is lost */
+  if(on)cur[url]={status:"applied",date:new Date().toISOString().slice(0,10)};else delete cur[url];
+  applied=cur;
+  try{const h=await(await dsDir(true)).getFileHandle("applied.json",{create:true});const w=await h.createWritable();await w.write(JSON.stringify(cur,null,1));await w.close();say("")}
+  catch(e){say("Could not save applied.json: "+e.message)}
+  draw();
+}
+async function load(){
+  jobs=await readJson("jobs.json",null);
+  if(!Array.isArray(jobs)){jobs=[];say("data sources/jobs.json not found or invalid. Select the folder that contains index.html and the 'data sources' folder.");return}
+  applied=await readJson("applied.json",{});
+  newest=jobs.reduce((m,j)=>(j.first_seen||"")>m?(j.first_seen||""):m,"").slice(0,10);
+  for(const [id,key] of [["city","search_city"],["src","source"]]){
+    const sel=$("#"+id);sel.length=1;
+    [...new Set(jobs.map(j=>j[key]).filter(Boolean))].sort().forEach(v=>sel.add(new Option(v,v)));
+  }
+  $("#flt").hidden=false;$("#open").textContent="Reload data";say("");page=1;draw();
+}
+async function pick(force = false) {
+  try {
+    if (!root || force) {
+      root = await showDirectoryPicker({ mode: "readwrite" });
+    }
+
+    if (await root.requestPermission({ mode: "readwrite" }) !== "granted") {
+      say("Permission needed to read and save.");
+      return;
+    }
+
+    try {
+      await load();
+    } catch (e) {
+      if (e.name !== "NotFoundError") throw e;
+
+      say("Previously selected folder was not found. Please select it again.");
+
+      root = await showDirectoryPicker({ mode: "readwrite" });
+
+      if (await root.requestPermission({ mode: "readwrite" }) !== "granted") {
+        say("Permission needed to read and save.");
+        return;
+      }
+
+      await load();
+    }
+
+    await idb("put", root);
+
+  } catch (e) {
+    say(
+      e.name === "AbortError"
+        ? ""
+        : "Folder access needs Edge or Chrome: " + e.message
+    );
+  }
+}
+function view(){
+  const q=$("#q").value.toLowerCase(),f=$("#fit").value,l=$("#lvl").value,c=$("#city").value,s=$("#src").value;
+  let r=jobs.filter(j=>{
+    const done=!!applied[key(j)];
+    if(done&&$("#hide").checked&&!$("#onlyapp").checked)return false;
+    if($("#onlyapp").checked&&!done)return false;
+    if($("#onlynew").checked&&(j.first_seen||"").slice(0,10)!==newest)return false;
+    if(f&&j.fit!==f)return false;if(l&&j.seniority!==l)return false;
+    if(c&&j.search_city!==c)return false;if(s&&j.source!==s)return false;
+    return !q||[j.title,j.company,j.location,j.cv_matches,j.gaps,j.experience_and_seniority_requirements].join(" ").toLowerCase().includes(q)});
+  const k=$("#sort").value,cmp={
+    fit:(a,b)=>(FIT[a.fit]??9)-(FIT[b.fit]??9)||(b.score||0)-(a.score||0)||(b.first_seen||"").localeCompare(a.first_seen||""),
+    new:(a,b)=>(b.first_seen||"").localeCompare(a.first_seen||""),
+    company:(a,b)=>(a.company||"").localeCompare(b.company||""),
+    title:(a,b)=>(a.title||"").localeCompare(b.title||"")}[k];
+  return r.sort(cmp);
+}
+function row(l,v){return v?`<dt>${l}</dt><dd>${esc(v)}</dd>`:""}
+function card(j){
+  const done=!!applied[key(j)],isNew=(j.first_seen||"").slice(0,10)===newest,sen=j.seniority==="senior";
+  const url=j.direct_listing_url||j.canonical_url;
+  const meta=[j.company,j.location,j.nearby?"nearby":"",j.source].filter(Boolean).map(esc).join(" · ");
+  const more=row("Gaps",j.gaps)+row("Caveats",(j.unverified?"Unverified. ":"")+(j.caveats||""))+(sen?row("Stretch check",j.stretch_check):"");
+  return `<article class="job${done?" done":""}" style="--fc:${FC[j.fit]||"var(--f3)"}"><div class="top"><div>
+  <div class="tags"><span class="tag fit">${esc(j.fit)} fit</span>${isNew?'<span class="tag">New</span>':""}${sen?'<span class="tag">Senior</span>':""}${done?`<span class="tag">Applied ${esc(applied[key(j)].date||"")}</span>`:""}</div>
+  <h2>${url?`<a href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">${esc(j.title)}</a>`:esc(j.title)}</h2></div>
+  <label class="apply"><input type="checkbox" data-u="${esc(key(j))}" ${done?"checked":""}>Applied</label></div>
+  <div class="meta">${meta}</div>
+  <dl>${row("Requirements",j.experience_and_seniority_requirements)}${row("Matches",j.cv_matches)}</dl>
+  ${more?`<details><summary>Gaps and caveats</summary><dl>${more}</dl></details>`:""}
+  <p class="found">Found via ${esc(j.search_city)}, ${esc(j.search_terms)}, ${j.results_page==null?"API results, no page number":"results page "+esc(j.results_page)} · first seen ${esc((j.first_seen||"").slice(0,10))}</p></article>`;
+}
+function draw(){
+  const r=view(),pages=Math.max(1,Math.ceil(r.length/PER));page=Math.min(page,pages);
+  const nApp=jobs.filter(j=>applied[key(j)]).length,nNew=jobs.filter(j=>(j.first_seen||"").slice(0,10)===newest).length;
+  const st=(n,l)=>`<span><b>${n}</b>${l}</span>`;
+  $("#stat").innerHTML=st(jobs.length,"jobs stored")+st(nNew,"newest run"+(newest?" ("+esc(newest)+")":""))+st(nApp,"applied");
+  $("#count").textContent=r.length+" of "+jobs.length+" jobs shown";
+  $("#list").innerHTML=r.length?r.slice((page-1)*PER,page*PER).map(card).join(""):`<div class="empty">No jobs match the current filters.</div>`;
+  const b=(p,t,cur)=>`<button data-p="${p}" ${cur?'class="cur" aria-current="page"':""}>${t}</button>`;
+  let h=`<button data-p="${page-1}" ${page<2?"disabled":""}>Previous</button>`;
+  for(let p=1;p<=pages;p++)if(p===1||p===pages||Math.abs(p-page)<=2)h+=b(p,p,p===page);else if(Math.abs(p-page)===3)h+="…";
+  $("#pager").innerHTML=h+`<button data-p="${page+1}" ${page>=pages?"disabled":""}>Next</button>`;
+}
+const setTheme=t=>{document.documentElement.dataset.theme=t;try{localStorage.setItem("jobs-theme",t)}catch(e){}$("#theme").textContent=t==="dark"?"Light theme":"Dark theme";$("#theme").setAttribute("aria-pressed",t==="dark")};
+$("#theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+setTheme(document.documentElement.dataset.theme);
+$("#open").onclick=pick;
+$("#change").onclick=async()=>{try{root=await showDirectoryPicker({mode:"readwrite"});await idb("put",root);page=1;await load()}catch(e){say(e.name==="AbortError"?"":"Could not open folder: "+e.message)}};
+$("#reset").onclick=()=>{["q","fit","lvl","city","src"].forEach(i=>$("#"+i).value="");$("#sort").value="fit";$("#hide").checked=true;$("#onlyapp").checked=false;$("#onlynew").checked=false;page=1;draw()};
+$("#flt").addEventListener("input",()=>{page=1;draw()});
+$("#list").addEventListener("change",e=>{if(e.target.dataset.u)setApplied(e.target.dataset.u,e.target.checked)});
+$("#pager").addEventListener("click",e=>{const p=+e.target.dataset.p;if(p){page=p;draw();scrollTo(0,0)}});
+(async()=>{
+  if(!window.showDirectoryPicker){say("Open this page in Edge or Chrome to read the data folder and save applied marks.");return}
+  try{root=await idb("get");if(root&&await root.queryPermission({mode:"readwrite"})==="granted")await load();else if(root)say("Click 'Select job folder' to reconnect.")}catch(e){}
+})();
+</script></body></html>
