@@ -7,11 +7,15 @@ description: Configurable job search. Finds job listings for the user's job titl
 
 ## Settings
 
-Edit the **Value** column. This table is the only configuration. Leave a row empty to be asked once on the first run; Claude then writes the answer back into this table.
+The user's settings live in `<base>/settings.md`, not in this file. Never write user answers into this SKILL.md, because the skill folder can be read-only or replaced on update.
+
+The table below is the **template**. On the first run the agent copies it, with all values filled in here, to `<base>/settings.md`. After that only `settings.md` is read and written. Leave a row empty to be asked once on the first run; Claude then writes the answer into `settings.md`.
+
+**Base folder:** the agent needs it to find `settings.md`, so it always takes it from, in this order: the folder the user names in their message, then the Base folder row in this table. The copy in `settings.md` is a record only. The agent never changes the row in this file.
 
 | Setting | Value | Notes |
 |---|---|---|
-| Base folder | `~/job-search` | Where `index.html` and `data sources/` live |
+| Base folder | `~/job-search` | Where `settings.md`, `index.html` and `data sources/` live. Read from SKILL.md only; in settings.md this row is a record, changing it there has no effect |
 | Job titles | | Comma separated, plus synonyms |
 | Core keywords | | Technologies a job must name, e.g. Python, Kubernetes |
 | Exclude keywords | | Skip any listing containing one of these |
@@ -30,8 +34,20 @@ Edit the **Value** column. This table is the only configuration. Leave a row emp
 | Open page after run | yes | Opens index.html in the default browser when the run succeeds |
 
 Rules for the settings:
-- Never run a search while a required row (Job titles, Skills, Locations, Job sites) is empty. Ask for all missing rows in one message, then save them in the table.
-- If the user changes a setting in chat, update the table and show the changed row.
+- Never run a search while a required row (Job titles, Skills, Locations, Job sites) is empty in `settings.md`. Ask for all missing rows in one message, then save them in `settings.md`.
+- If the user changes a setting in chat, update `settings.md` and show the changed row.
+- If `settings.md` does not exist, treat the run as a first run.
+
+## Which part to follow
+
+When the skill starts, decide once:
+
+1. Find the base folder (user's message, else the Base folder row in the Settings table).
+2. Check whether `<base>/settings.md` exists and all required rows (Job titles, Skills, Locations, Job sites) have a value. If Skills is a CV path, `profile.md` must exist.
+3. Decide:
+   - **All present:** skip **First run**, ask nothing, and go straight to **Run steps**.
+   - **Something missing:** do **First run** (it asks only for what is missing), then continue with **Run steps** if the user agrees to start the search.
+   - **The user only asked to set up or change settings:** do **First run** or update `settings.md`, then stop.
 
 ## What it does
 
@@ -39,6 +55,8 @@ Searches the chosen job sites with a browser, rates every listing against the us
 
 ```
 <base>/
+  settings.md          the user's settings (copied from the table above)
+  profile.md           confirmed profile summary from the CV or skills
   index.html           copied from this skill folder if missing, never overwritten
   run.lock             temporary
   data sources/
@@ -49,10 +67,10 @@ Searches the chosen job sites with a browser, rates every listing against the us
 
 ## First run
 
-1. Fill missing settings (see above).
-2. CV handling: if Skills contains a CV path or link, read it (file tools for a path, browser for a public link; if a login is needed, say so and ask for a file). Extract only job titles, skills, technologies, years of experience, qualifications, domains and languages. Never store name, phone, email, address or CV text. Show the summary, let the user correct it, then save it as `<base>/profile.md` and use it as the skills list.
-3. Create `<base>`, `data sources/`, copy `index.html`, create `jobs.json` and `excluded.json` as `[]`.
-4. Tell the user how to open `index.html`, then offer to start the first search.
+1. Find the base folder (user's message, else the Base folder row in the Settings table). If `<base>` or `settings.md` is missing, create the folder and copy the Settings table, including every value filled in, into `<base>/settings.md`. Then fill missing settings (see above) and save them in `settings.md`. If `profile.md` already exists, use it as the Skills value and do not ask for skills again.
+2. CV handling: if Skills contains a CV path or link, read it (file tools for a path, browser for a public link; if a login is needed, say so and ask for a file). Extract only job titles, skills, technologies, years of experience, qualifications, domains and languages. Never store name, phone, email, address or CV text. Show the summary, let the user correct it, then save it as `<base>/profile.md` with a first line `Source: <CV path or link>` and use it as the skills list. On later runs do not read the CV again unless the CV path or link in `settings.md` differs from the `Source:` line, or the user asks for a refresh.
+3. Create `data sources/` if missing. Copy `index.html` if missing. Create `jobs.json` and `excluded.json` as `[]` only if they do not exist. Never overwrite an existing file.
+4. Tell the user how to open `index.html`, then offer to start the first search. If the user agrees (or already asked to run the search), continue with Run steps, starting at step 1.
 
 ## Browser
 
@@ -61,8 +79,8 @@ Searches the chosen job sites with a browser, rates every listing against the us
 
 ## Run steps
 
-1. Lock: if `run.lock` is younger than 3 hours, stop (another run is active). Otherwise create it. Delete it at the end, also on failure.
-2. Read the Settings table, `jobs.json` and `excluded.json`. If a JSON file cannot be parsed, stop and report it. Never overwrite a corrupt file or treat it as empty.
+1. Find the base folder (user's message, else the Base folder row in the Settings table). Lock: if `run.lock` is younger than 3 hours, stop (another run is active). Otherwise create it. Delete it at the end, also on failure.
+2. Read `<base>/settings.md`, `profile.md` (if present), `jobs.json` and `excluded.json`. If `settings.md` or a required row is missing, go back to First run (see "Which part to follow"). If a JSON file cannot be parsed, stop and report it. Never overwrite a corrupt file or treat it as empty.
 3. Take one run timestamp (local time, `yyyy-MM-dd HH:mm`) and use it as `first_seen` for all new listings.
 4. Search every site for every location and job title:
    - Websites: open the site's search page (fill in term, city, radius; if the URL pattern fails, use the site's search box). Check the configured number of pages.
