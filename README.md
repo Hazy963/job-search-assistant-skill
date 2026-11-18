@@ -30,14 +30,15 @@ An agent skill that searches job sites for you. You fill in a short settings tab
 
 ## Set up your settings
 
-Open `SKILL.md`. At the top is a **settings table**. Fill in what you can; you can also leave rows empty and let the agent ask.
+Your settings are stored in `settings.md` inside your job-search folder (default `~/job-search`). The agent creates it on the first run and asks for anything missing, so you don't have to edit anything first. You can change `settings.md` at any time, or tell the agent to change a setting.
+
+Optional: before installing, you can fill in the table at the top of `SKILL.md`. Those values become the starting values in `settings.md`. After the first run, `SKILL.md` is no longer used for your settings, so updating the skill never overwrites them.
 
 | Setting | Meaning |
 | --- | --- |
-| Base folder | Where results are stored (default `~/job-search`) |
-| CV path or link | Optional. Read once and summarized into `profile.md` |
+| Base folder | Default `~/job-search`. Set it in the `SKILL.md` table before the first run, or name it in your message. It is also copied to `settings.md` as a record, but changing it there has no effect |
 | Job titles / search terms | What to search for |
-| Skills, experience years, seniority, qualifications, languages | Used to rate every job. Skills not listed are never assumed |
+| Skills (or CV path / link), experience years, seniority, qualifications, languages | Used to rate every job. Skills not listed are never assumed |
 | Core keywords | A job is kept only if it names one of these in the title or must-have requirements ("nice to have" does not count) |
 | Exclude keywords | Jobs mentioning these are skipped |
 | Locations | City and radius in km |
@@ -47,10 +48,10 @@ Open `SKILL.md`. At the top is a **settings table**. Fill in what you can; you c
 ## How a run works
 
 1. **Start.** Say "find jobs" or "run the job search" (or invoke the skill with `/` and its name, then `run`).
-2. **Read the settings.** The agent reads the table at the top of `SKILL.md`.
+2. **Read the settings.** The agent reads `settings.md` and `profile.md` from your job-search folder.
 3. **Ask only if needed.**
-   - If a required row is empty (job titles, skills, locations, job sites), the agent asks for all missing items in **one message** and saves the answers in the table.
-   - If you gave a CV, the agent reads it once, shows you a short summary to confirm, and saves it as `profile.md`. Only job titles, skills, experience, qualifications and languages are kept. Your name, phone, email, address and the CV text are **not** stored.
+   - If a required row is empty (job titles, skills, locations, job sites), the agent asks for all missing items in **one message** and saves the answers in `settings.md`.
+   - If you gave a CV, the agent reads it once, shows you a short summary to confirm, and saves it as `profile.md`. Only job titles, skills, experience, qualifications and languages are kept. Your name, phone, email, address and the CV text are **not** stored. The CV is only read again if you change the CV path or ask for a refresh.
    - If everything is filled in, it asks nothing.
 4. **Search.**
    - It creates a lock (`run.lock`) so two runs cannot overlap.
@@ -63,12 +64,35 @@ Open `SKILL.md`. At the top is a **settings table**. Fill in what you can; you c
    - The agent tells you how many are new and whether any site failed or was blocked.
 6. **View the results.** Open `index.html` with Edge or Chrome and click **Reload data**.
 
+## GitHub Copilot integration example
+Here you can find a full example of how to install, run and present report values to track which jobs are newly found and which ones you have or have not applied to yet.
+
+### Skill configuration
+Configure your skill before installing it to make working with it easier. Here you define the folder where your reports will be saved, your job title, and the MCP tools and websites to use. The values you enter here are copied into `settings.md` on the first run.
+NOTE: Base Folder will always be read from the skill md or your message so be sure to configure it hiere before install.
+
+<img width="860" height="853" alt="image" src="https://github.com/user-attachments/assets/29b67b19-5ac3-437c-9064-e56cc93bc1b9" />
+
+### Installing the skill
+Go to customization, click the green Add button, then Skill, and click Install:
+<img width="1917" height="247" alt="image" src="https://github.com/user-attachments/assets/3b5d9496-4e22-4ee4-9344-4515c8734203" />
+
+Choose the extracted skill folder where you configured your skill properties. You should end up with something like this:
+<img width="1168" height="662" alt="image" src="https://github.com/user-attachments/assets/cffe6a89-5afc-44db-aa27-57a16804aedf" />
+
+### Run the skill:
+you can just call the skill and say run it will use your configured information or ask you for missing ones and copy them to setting.md
+<img width="1392" height="898" alt="image" src="https://github.com/user-attachments/assets/7d72377f-4495-4093-951d-44fd5a032b99" />
+### Presenting Reports Result:
+if you have the "Open page after run" flag set to true the skill will automaticlly opens the index.html and you can select your defined base folder to see all founded jobs of all runs and have the abilty to filter them and mark them as appield or leave them to apply to them later
+
 ## Everyday use
 
 1. Ask: **"Run the job search."**
 2. Open `index.html` in your job-search folder.
 3. First time only: click **Select job folder** and choose the folder that contains `index.html`. The browser remembers it. If you move the folder, use **Change folder**.
 4. After each run, click **Reload data**.
+5. To change settings, edit `settings.md` or tell the agent ("add Munich, 30 km").
 
 On the page you can search, filter by fit, level, city and source, sort, and tick **Applied** (applied jobs are hidden by default; use **Only applied** to see them). **Show only new jobs** shows what the latest run found and combines with all other filters.
 
@@ -86,8 +110,9 @@ Job sites change their URLs, so check patterns in your browser and adjust.
 
 ```
 your-job-search-folder/
-  index.html           the results page
+  settings.md          your settings (created on the first run)
   profile.md           your confirmed profile summary (from your CV or skills)
+  index.html           the results page
   run.lock             exists only while a run is in progress
   data sources/
     jobs.json          all found jobs, one file
@@ -106,9 +131,11 @@ Duplicates are avoided from `jobs.json` and `excluded.json`: a job is skipped if
 ## Troubleshooting
 
 - **The page shows no jobs:** select the folder that contains `index.html` and `data sources`, then click **Reload data**.
-- **A site returns nothing:** it may block automation or have changed its URL. Check the site entry, or remove it.
+- **A site returns nothing:** it may block automation or have changed its URL. Check the Job sites row in `settings.md`, or remove the site.
 - **The page asks for the folder again:** after a browser restart it may ask for permission. Click **Select job folder**.
-- **"Another run is in progress":** a run was interrupted. Delete `run.lock` if it is older than a few hours.
+- **"Another run is in progress":** a run is still active. A lock older than 3 hours is treated as stale and replaced automatically.
+- **The agent asks all questions again:** it can't find your folder or `settings.md`. Tell it the folder path, or check that `settings.md` exists there. After updating the skill, a custom base folder is reset to the default, so name it in your message.
+- **I deleted `settings.md`:** the agent asks for your settings again. Your jobs and Applied marks are not affected.
 - **Firefox:** not supported, because it cannot access local folders. Use Edge or Chrome.
 
 ## License
