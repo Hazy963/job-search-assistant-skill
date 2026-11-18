@@ -64,6 +64,11 @@ Optional: before installing, you can fill in the table at the top of `SKILL.md`.
    - The agent tells you how many are new and whether any site failed or was blocked.
 6. **View the results.** Open `index.html` with Edge or Chrome and click **Reload data**.
 
+### simple process Breakdown:
+The skill goes through Setup whenever settings.md is missing or a required setting is empty, and goes straight to Search otherwise. After Setup you can choose to start the search right away.
+This is a simplified breakdown to show where the information is read from
+<img width="1230" height="688" alt="image" src="https://github.com/user-attachments/assets/ae619a9d-c3c4-45c4-9dd8-45c9fcd11964" />
+
 ## GitHub Copilot integration example
 Here you can find a full example of how to install, run and present report values to track which jobs are newly found and which ones you have or have not applied to yet.
 
