@@ -26,7 +26,7 @@ The table below is the **template**. On the first run the agent copies it, with 
 | Locations | | `City (radius km)`, comma separated |
 | Remote | no | yes / no |
 | Languages | | With level, e.g. German C1, English B2 |
-| Job sites | Arbeitsagentur, StepStone, Indeed | Any site with a search page |
+| Job sites | Arbeitsagentur, StepStone, Indeed , xing | Any site with a search page |
 | Google discovery | yes | yes / no |
 | Arbeitsagentur via MCP | yes | Use the job-search MCP if installed, else browser |
 | Other MCP sources | | Server and tool name, if any |
