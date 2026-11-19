@@ -34,22 +34,32 @@ Your settings are stored in `settings.md` inside your job-search folder (default
 
 Optional: before installing, you can fill in the table at the top of `SKILL.md`. Those values become the starting values in `settings.md`. After the first run, `SKILL.md` is no longer used for your settings, so updating the skill never overwrites them.
 
-| Setting | Meaning |
+| Setting | Description |
 | --- | --- |
-| Base folder | Default `~/job-search`. Set it in the `SKILL.md` table before the first run, or name it in your message. It is also copied to `settings.md` as a record, but changing it there has no effect |
-| Job titles / search terms | What to search for |
-| Skills (or CV path / link), experience years, seniority, qualifications, languages | Used to rate every job. Skills not listed are never assumed |
-| Core keywords | A job is kept only if it names one of these in the title or must-have requirements ("nice to have" does not count) |
-| Exclude keywords | Jobs mentioning these are skipped |
-| Locations | City and radius in km |
-| Senior handling | `separate` (default, Senior tag plus stretch check), `exclude` or `include` |
-| Job sites | The sites to search (see [Job sites](#job-sites)) |
-| Open page after run | `true` opens `index.html` automatically when a run finishes; `false` (default) does not |
+| Base folder | Where settings, results and the local results page are stored. |
+| Job titles | Job titles used for searching. Multiple titles are supported. |
+| Allow search with synonyms | Enables or disables additional search terms. |
+| Synonyms | Additional job titles or search terms. Used only when synonyms are enabled. |
+| Core keywords | Main technologies required for a job to be considered relevant. |
+| Exclude keywords | Terms that automatically exclude a listing. |
+| Skills | Your skills, a CV file path or a CV link. |
+| Years of experience | Your professional experience in years. |
+| Seniority | Junior, Mid or Senior. |
+| Senior roles | `separate`, `exclude` or `include`. |
+| Locations | Cities and search radiuses in kilometres. |
+| Remote | Remote-work preference. Currently not used for searching or rating. |
+| Languages | Languages and proficiency levels. |
+| Job sites | Websites to search, such as Arbeitsagentur, StepStone, Indeed and XING. |
+| Google discovery | Enables or disables Google discovery. |
+| Arbeitsagentur via MCP | Uses the Arbeitsagentur job-search MCP when available. |
+| Other MCP sources | Additional job-search MCP servers and tools. |
+| Pages per site | Number of result pages to check. |
+| Open page after run | Automatically opens `index.html` after a successful run. |
 
 ## How a run works
 
 1. **Start.** Say "find jobs" or "run the job search" (or invoke the skill with `/` and its name, then `run`).
-2. **Read the settings.** The agent reads `settings.md` and `profile.md` from your job-search folder.
+2. **Read the settings.** The agent reads `settings.md` and `profile.md` from your job-search .
 3. **Ask only if needed.**
    - If a required row is empty (job titles, skills, locations, job sites), the agent asks for all missing items in **one message** and saves the answers in `settings.md`.
    - If you gave a CV, the agent reads it once, shows you a short summary to confirm, and saves it as `profile.md`. Only job titles, skills, experience, qualifications and languages are kept. Your name, phone, email, address and the CV text are **not** stored. The CV is only read again if you change the CV path or ask for a refresh.
@@ -78,9 +88,9 @@ Here you can find a full example of how to install, run and present report value
 
 ### Skill configuration
 
-Configure your skill before installing it to make working with it easier. Here you define the folder where your reports will be saved, your job title, and the MCP tools and websites to use. The values you enter here are copied into `settings.md` on the first run.
+Configure your skill before installing it to make working with it easier. Here you define the  where your reports will be saved, your job title, and the MCP tools and websites to use. The values you enter here are copied into `settings.md` on the first run.
 
-> **Note:** The base folder is always read from the `SKILL.md` table or from your message, so set it before installing.
+> **Note:** The base  is always read from the `SKILL.md` table or from your message, so set it before installing.
 
 <img width="860" height="853" alt="Skill configuration table in GitHub Copilot" src="https://github.com/user-attachments/assets/29b67b19-5ac3-437c-9064-e56cc93bc1b9" />
 
@@ -90,7 +100,7 @@ Go to customization, click the green Add button, then Skill, and click Install:
 
 <img width="1917" height="247" alt="GitHub Copilot customization menu with the Add, Skill and Install buttons" src="https://github.com/user-attachments/assets/3b5d9496-4e22-4ee4-9344-4515c8734203" />
 
-Choose the extracted skill folder where you configured your skill properties. You should end up with something like this:
+Choose the extracted skill  where you configured your skill properties. You should end up with something like this:
 
 <img width="1168" height="662" alt="Installed job-search skill listed in GitHub Copilot" src="https://github.com/user-attachments/assets/cffe6a89-5afc-44db-aa27-57a16804aedf" />
 
@@ -102,13 +112,13 @@ Call the skill and say `run`. It uses your configured values, asks for anything 
 
 ### Viewing the results
 
-If the "Open page after run" setting is `true`, the skill opens `index.html` automatically. Select your base folder to see the jobs from all runs. You can filter them and mark each job as applied, or leave it to apply later.
+If the "Open page after run" setting is `true`, the skill opens `index.html` automatically. Select your base  to see the jobs from all runs. You can filter them and mark each job as applied, or leave it to apply later.
 
 ## Everyday use
 
 1. Ask: **"Run the job search."**
-2. Open `index.html` in your job-search folder.
-3. First time only: click **Select job folder** and choose the folder that contains `index.html`. The browser remembers it. If you move the folder, use **Change folder**.
+2. Open `index.html` in your job-search .
+3. First time only: click **Select job ** and choose the folder that contains `index.html`. The browser remembers it. If you move the folder, use **Change folder**.
 4. After each run, click **Reload data**.
 5. To change settings, edit `settings.md` or tell the agent ("add Munich, 30 km").
 
@@ -183,6 +193,7 @@ your-job-search-folder/
   profile.md           your confirmed profile summary (from your CV or skills)
   index.html           the results page
   run.lock             exists only while a run is in progress
+  progress.json        exists only if last run was not completed. 
   data sources/
     jobs.json          all found jobs, one file
     excluded.json      skipped, not-relevant listings
