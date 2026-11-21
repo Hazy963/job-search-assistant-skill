@@ -1,6 +1,7 @@
 # Job Search Skill
 
-<img width="1884" height="904" alt="Job Search Skill results page with filters and job list" src="https://github.com/user-attachments/assets/d1eb133e-c21b-49fc-b9c9-6464af3ec4c1" />
+<img width="1899" height="908" alt="image" src="https://github.com/user-attachments/assets/2567b7aa-95d9-4dd5-864e-44b3e1b046dd" />
+
 
 An agent skill that searches job sites for you. You fill in a short settings table (job titles, skills, locations, sites) or point it to your CV. It searches the sites you choose, rates every listing against your profile, and keeps all results in one local list that you browse in a web page.
 
