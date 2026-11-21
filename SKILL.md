@@ -25,7 +25,7 @@ The table below is the **template**. On the first run the agent copies it, with 
 | Years of experience | 4 | Number |
 | Seniority | mid | junior / mid / senior |
 | Senior roles | separate | separate (keep, shown apart) / exclude / include |
-| Locations | Düsseldorf (30 km), Essen (30 km), Ludwigsburg (30 km), Stuttgart (30 km) | `City (radius km)`, comma separated |
+| Locations | Düsseldorf (30 km), Ludwigsburg (30 km), Stuttgart (30 km) | `City (radius km)`, comma separated |
 | Remote | no filter, ignore | Not used for searching or rating |
 | Languages | German C1, English C1 | With level, e.g. German C1, English B2 |
 | Job sites | Arbeitsagentur, StepStone, Indeed, XING | Any site with a search page |
